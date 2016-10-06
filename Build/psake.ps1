@@ -29,7 +29,7 @@ Task Init {
     $lines
     Set-Location $ProjectRoot
     "Build System Details:"
-    Get-Item ENV:BH*
+    Get-Item env:BH*
     "`n"
 }
 
@@ -41,7 +41,7 @@ Task Test -Depends Init  {
     $TestResults = Invoke-Pester -Path $ProjectRoot\Tests -PassThru -OutputFormat NUnitXml -OutputFile "$ProjectRoot\$TestFile"
 
     # If using AppVeyor, upload test results for viewing directly through the Web interface
-    If($ENV:BHBuildSystem -eq 'AppVeyor')
+    if ($env:BHBuildSystem -eq 'AppVeyor')
     {
         (New-Object 'System.Net.WebClient').UploadFile(
             "https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)",
@@ -77,8 +77,8 @@ Task Deploy -Depends Build {
 
     # Check to make sure we should deploy
     if(
-        $ENV:BHBuildSystem -ne 'Unknown' -and
-        $ENV:BHBranchName -eq "master"
+        $env:BHBuildSystem -ne 'Unknown' -and
+        $env:BHBranchName -eq "master"
     )
     {
         $Params = @{
@@ -91,8 +91,8 @@ Task Deploy -Depends Build {
     else
     {
         "Skipping deployment: To deploy, ensure that...`n" +
-        "`t* You are in a known build system (Current: $ENV:BHBuildSystem)`n" +
-        "`t* You are committing to the master branch (Current: $ENV:BHBranchName)"
+        "`t* You are in a known build system (Current: $env:BHBuildSystem)`n" +
+        "`t* You are committing to the master branch (Current: $env:BHBranchName)"
     }
 
 }
