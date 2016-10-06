@@ -5,7 +5,7 @@
 # Init some things
 Properties {
     # Find the build folder based on build system
-        $ProjectRoot = $ENV:BHProjectPath
+        $ProjectRoot = $env:BHProjectPath
         if(-not $ProjectRoot)
         {
             $ProjectRoot = $PSScriptRoot
@@ -17,7 +17,7 @@ Properties {
     $lines = '----------------------------------------------------------------------'
 
     $Verbose = @{}
-    if($ENV:BHCommitMessage -match "!verbose")
+    if($env:BHCommitMessage -match "!verbose")
     {
         $Verbose = @{Verbose = $True}
     }
@@ -86,6 +86,7 @@ Task Deploy -Depends Build {
             Force = $true
         }
 
+        "Starting deployment"
         Invoke-PSDeploy @Verbose @Params
     }
     else

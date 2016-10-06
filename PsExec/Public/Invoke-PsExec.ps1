@@ -1,4 +1,4 @@
-function Invoke-PSExec {
+function Invoke-PsExec {
     [CmdletBinding(DefaultParameterSetName = 'Command')]
     param(
         [Parameter(ParameterSetName = 'Command',
