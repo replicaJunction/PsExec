@@ -5,7 +5,7 @@
 
 # folder structure of:
 # - RepoFolder
-#   - Tools
+#   - Build
 #     - This PSDeploy file
 #   - ModuleName
 #     - ModuleName.psd1
