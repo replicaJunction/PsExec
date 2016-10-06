@@ -4,7 +4,7 @@ if (-not $PSScriptRoot) {
 }
 
 if (-not $env:BHProjectPath) {
-    Set-BuildEnvironment -Path $PSScriptRoot\..
+    Set-BuildEnvironment -Path ((Resolve-Path -Path "$PSScriptRoot\..").Path)
 }
 
 # Refresh the module before running these tests
@@ -14,8 +14,7 @@ Import-Module $env:BHPSModuleManifest -Force
 # Import-Module (Join-Path $env:BHProjectPath $env:BHProjectName) -Force
 
 if (Get-Module $env:BHProjectName) {
-    Write-Host "Found module [$env:BHProjectName]"
-    -ForegroundColor Green
+    Write-Host "Found module [$env:BHProjectName]" -ForegroundColor Green
 }
 else {
     Write-Host "Could not find module [$env:BHProjectName]" -ForegroundColor Yellow
@@ -33,7 +32,7 @@ Describe "$ENV:BHProjectName PS$PSVersion" {
         }
 
         It 'Module contains functions' {
-            $moodule.ExportedFunctions.Keys -contains 'Invoke-PsExec' | Should Be $True
+            $module.ExportedFunctions.Keys -contains 'Invoke-PsExec' | Should Be $True
         }
     }
 }
