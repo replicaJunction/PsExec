@@ -58,9 +58,9 @@ Write-Host "Setting up build environment (BuildHelpers)" -ForegroundColor Green
 Set-BuildEnvironment
 
 # Now pass control to PSake
-Write-Host "Invokeing PSake" -ForegroundColor Green
+Write-Host "Invoking PSake" -ForegroundColor Green
 Write-Host
-Invoke-PSake .\psake.ps1
+Invoke-PSake .\Build\psake.ps1
 
 # Exit with either a 0 (success) or a 1 (failure) so the build environment knows whether it succeeded
 exit ( [int]( -not $psake.build_success ) )
