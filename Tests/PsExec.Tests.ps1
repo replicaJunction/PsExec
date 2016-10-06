@@ -3,13 +3,19 @@ if (-not $PSScriptRoot) {
     $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 }
 
-if (-not $ENV:BHProjectPath) {
+if (-not $env:BHProjectPath) {
     Set-BuildEnvironment -Path $PSScriptRoot\..
 }
 
 # Refresh the module before running these tests
-Remove-Module $ENV:BHProjectName -ErrorAction SilentlyContinue
-Import-Module (Join-Path $ENV:BHProjectPath $ENV:BHProjectName) -Force
+Remove-Module $env:BHProjectName -ErrorAction SilentlyContinue
+Write-Host "Attempting to import module [$env:BHPSModuleManifest]" -ForegroundColor Cyan
+Import-Module $env:BHPSModuleManifest -Force
+# Import-Module (Join-Path $env:BHProjectPath $env:BHProjectName) -Force
+
+if (Get-Module $env:BHProjectName) {
+
+}
 
 InModuleScope 'PsExec' {
     $PSVersion = $PSVersionTable.PSVersion.Major
@@ -17,14 +23,14 @@ InModuleScope 'PsExec' {
     Describe "$ENV:BHProjectName PS$PSVersion" {
         Context 'Basic Behavior' {
             Set-StrictMode -Version latest
-            $Module = Get-Module $ENV:BHProjectName
+            $module = Get-Module $env:BHProjectName
 
             It 'Module loads successfully' {
-                $Module.Name | Should Pe $ENV:BHProjectName
+                $module.Name | Should Pe $env:BHProjectName
             }
 
             It 'Module contains functions' {
-                $Module.ExportedFunctions.Keys -contains 'Invoke-PsExec' | Should Be $True
+                $moodule.ExportedFunctions.Keys -contains 'Invoke-PsExec' | Should Be $True
             }
         }
     }
