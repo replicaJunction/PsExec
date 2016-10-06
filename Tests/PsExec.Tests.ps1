@@ -14,24 +14,26 @@ Import-Module $env:BHPSModuleManifest -Force
 # Import-Module (Join-Path $env:BHProjectPath $env:BHProjectName) -Force
 
 if (Get-Module $env:BHProjectName) {
-
+    Write-Host "Found module [$env:BHProjectName]"
+    -ForegroundColor Green
+}
+else {
+    Write-Host "Could not find module [$env:BHProjectName]" -ForegroundColor Yellow
 }
 
-InModuleScope 'PsExec' {
-    $PSVersion = $PSVersionTable.PSVersion.Major
+$PSVersion = $PSVersionTable.PSVersion.Major
 
-    Describe "$ENV:BHProjectName PS$PSVersion" {
-        Context 'Basic Behavior' {
-            Set-StrictMode -Version latest
-            $module = Get-Module $env:BHProjectName
+Describe "$ENV:BHProjectName PS$PSVersion" {
+    Context 'Basic Behavior' {
+        Set-StrictMode -Version latest
+        $module = Get-Module $env:BHProjectName
 
-            It 'Module loads successfully' {
-                $module.Name | Should Pe $env:BHProjectName
-            }
+        It 'Module loads successfully' {
+            $module.Name | Should Be $env:BHProjectName
+        }
 
-            It 'Module contains functions' {
-                $moodule.ExportedFunctions.Keys -contains 'Invoke-PsExec' | Should Be $True
-            }
+        It 'Module contains functions' {
+            $moodule.ExportedFunctions.Keys -contains 'Invoke-PsExec' | Should Be $True
         }
     }
 }
