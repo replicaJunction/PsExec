@@ -23,4 +23,4 @@ skip_commits:
 build: false
 
 test_script:
-    - ps: . .\Build\build.ps1
+    - ps: . .\Build\AppVeyor.ps1
