@@ -63,11 +63,13 @@ Task Build -Depends Test {
     $lines
 
     # BuildHelpers can automatically set FunctionsToExport in the module manifest. This improves module autoloading performance.
+    "Defining FunctionsToExport"
     Set-ModuleFunctions
 
     # BuildHelpers can also update the module version automatically. What a great module!
+    "Incrementing module version"
     $version = Get-NextPSGalleryVersion -Name $env:BHProjectName
-    Update-Metadata -Path $env:PHPSModuleManifest -PropertyName ModuleVersion -Value $version
+    Update-Metadata -Path $env:BHPSModuleManifest -PropertyName ModuleVersion -Value $version
 }
 
 Task Deploy -Depends Build {
