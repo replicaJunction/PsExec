@@ -129,7 +129,7 @@ function Invoke-PsExec {
                 $remoteTempFilename = 'psexecTemp.ps1'
                 # Apparently we need to pipe some data into STDIN in order to get PSExec to exit properly
                 # More details here: http://www.leeholmes.com/blog/2007/10/02/using-powershell-and-psexec-to-invoke-expressions-on-remote-computers/
-                [void] $args.Append("cmd /c `"echo . | powershell.exe -NoProfile -ExecutionPolicy Bypass -File '$env:SystemRoot\$remoteTempFilename'`"")
+                [void] $args.Append("cmd /c `"echo . | powershell.exe -NoProfile -ExecutionPolicy Bypass -File $env:SystemRoot\$remoteTempFilename`"")
             }
             default {
                 Write-Warning "Invoke-PsExec error: Unhandled parameter set name $($PSCmdlet.ParameterSetName)"
