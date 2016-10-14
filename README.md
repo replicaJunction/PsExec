@@ -1,5 +1,7 @@
 # PsExec
 
+[![Build status](https://ci.appveyor.com/api/projects/status/rnmrnts05m23j7qq?svg=true)](https://ci.appveyor.com/project/JoshuaT/psexec)
+
 PsExec is a small PowerShell module designed to make it easier to use Sysinternals' PsExec.exe within PowerShell.
 
 **By using this module ("PsExec"), you agree to the [Sysinternals Software License Terms](https://technet.microsoft.com/en-us/sysinternals/bb469936) in addition to the license for this product.**
