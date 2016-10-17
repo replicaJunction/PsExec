@@ -114,14 +114,18 @@ function Invoke-PsExec {
 
         switch ($PSCmdlet.ParameterSetName) {
             'Command' {
-                # Escape any quotes in the command
-                # $commandEscaped = $Command.Replace('"', '""')
-                # [void] $args.Append("cmd /c `"$commandEscaped`"")
                 if (-not $Copy) {
-                    [void] $args.Append("cmd /c $Command")
+                    # cmd /s causes the interpreter to ignore the first and last pair of quotes, then treat everything else literally.
+                    # This allows the user to specify whatever quotes he needs without worrying about escaping them.
+                    
+                    # References:
+                    # http://stackoverflow.com/questions/355988/how-do-i-deal-with-quote-characters-when-using-cmd-exe
+                    # http://stackoverflow.com/questions/9866962/what-is-cmd-s-for
+                    
+                    [void] $args.Append("cmd /s /c `" $Command `"")
                 }
                 else {
-                    # If we're copying the file, we can't use the cmd /c prefix, because the file path will be a path to a local file instead of a remote one.
+                    # If we're copying the file, we can't use the cmd /c prefix, because PsExec expects the file path provided to be a path to a local file
                     [void] $args.Append("$Command")
                 }
             }
@@ -191,9 +195,6 @@ function Invoke-PsExec {
                     $remoteScriptFile = Join-Path -Path "\\$c\admin`$" -ChildPath $remoteTempFilename
                     Write-Debug "[Invoke-PsExec] Copying script file to path [$remoteScriptFile]"
                     Copy-Item -Path $ScriptFile -Destination $remoteScriptFile -Force
-                }
-                elseif ($Copy) {
-
                 }
 
                 # We're using System.Diagnostics.Process instead of Start-Process due to the way Start-Process handles output redirection. (Spoilers: It doesn't.)
