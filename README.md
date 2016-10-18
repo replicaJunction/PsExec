@@ -21,9 +21,11 @@ It is.
 
 This is a need that I have in a lot of projects, and I was tired of making fixes in one project, then forgetting to copy them to another. I decided that even a small module would be a much easier way to allow other projects to reference the same function.
 
-### Why should I use this module? So and so did PsExec through PowerShell much better!
+### Why should I use this module? So-and-so did PsExec through PowerShell much better!
 
 I don't claim this is the first - or the best - implementation of PsExec in PowerShell. What I will say is that I couldn't find an existing implementation that met my needs exactly - either they were too complex, too simple, or didn't return all the data I needed.
+
+I also couldn't find anything published to the Gallery. The PowerShell Gallery is a huge timesaver for "utility" modules like this one.
 
 Besides, as an open-source project, if something doesn't work the way you want it to work, feel free to change it! You can even submit an issue or a pull request so others can benefit from your changes as well.
 
