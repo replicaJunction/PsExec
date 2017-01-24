@@ -75,10 +75,14 @@ function Invoke-PsExec {
             Write-Debug "[Invoke-PsExec] Using PSExec at path $PsExecPath"
         }
 
+        # Type name of the object that gets output
+        $outputType = 'PsExec.Result'
+
         # ProcessStartInfo uses ms instead of seconds
         $timeoutMilliseconds = $TimeoutSeconds * 1000
 
         $args = New-Object -TypeName System.Text.StringBuilder -ArgumentList '-accepteula '
+
         # [void] $args.Append("-accepteula \\{0}") # Computer name will go here
         if ($ComputerName) {
             [void] $args.Append('\\{0} ')
@@ -166,25 +170,38 @@ function Invoke-PsExec {
                 $thisArgs = $psExecArguments.Replace('{0}', $fixedComputerName)
             }
 
+            if (-not $Credential) {
+                $thisArgsClean = $thisArgs
+            }
+            else {
+                # Clean password from displayed output
+                $thisArgsClean = $thisArgs -replace '(\s+)\-p\s+\S+\s', "$($Matches[1])-p <password>$($Matches[1])"
+            }
+
             if ($PSVersionTable.PSVersion.Major -gt 2) {
-                $props = [Ordered] @{
+                $props = [PSCustomObject] @{
+                    PSTypeName    = $outputType
                     ComputerName  = $c
+                    CommandLine   = "$PsExecPath $thisArgsClean"
                     Ping          = $false
                     Success       = $false
                     ExitCode      = -1
                     StandardOut   = ""
                     StandardError = ""
                 }
+                $useV2 = $false
             }
             else {
                 $props = @{
                     ComputerName  = $c
+                    CommandLine   = "$PsExecPath $thisArgsClean"
                     Ping          = $false
                     Success       = $false
                     ExitCode      = -1
                     StandardOut   = ""
                     StandardError = ""
                 }
+                $useV2 = $true
             }
 
             if ((-not $fixedComputerName) -or (Test-Connection -ComputerName $fixedComputerName -BufferSize 16 -Count 2 -Quiet)) {
@@ -252,9 +269,16 @@ function Invoke-PsExec {
                 Write-Verbose "Unable to connect to computer [$fixedComputerName]"
             }
 
-            $obj = New-Object -TypeName PSCustomObject -Property $props
-            $obj.PSTypeNames.Insert(0, 'Invoke-PsExec.Result')
-            Write-Output $obj
+            if (-not $useV2) {
+                # If we're in v3 or greater, $props is already a custom object.
+                Write-Output $props
+            }
+            else {
+                # Otherwise, we need to create an object out of it.
+                $obj = New-Object -TypeName PSCustomObject -Property $props
+                $obj.PSTypeNames.Insert(0, $outputType)
+                Write-Output $obj
+            }
         }
     }
 
